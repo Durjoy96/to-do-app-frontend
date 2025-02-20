@@ -2,13 +2,21 @@ import { useContext } from "react";
 import { AuthContext } from "../../../../AuthProvider/AuthProvider";
 import googleImg from "../../../../assets/icons/google.png";
 import { useNavigate } from "react-router";
+import AxiosPublic from "../../../../hooks/Axios/AxiosPublic";
 
 const GoogleSignIn = () => {
   const { googleSingIn } = useContext(AuthContext);
+  const Axios = AxiosPublic();
   const navigate = useNavigate();
   const btnHandler = () => {
-    googleSingIn().then(() => {
-      navigate("/dashboard");
+    googleSingIn().then((res) => {
+      const user = {
+        displayName: res.user.displayName,
+        email: res.user.email,
+        photoURL: res.user.photoURL,
+      };
+      Axios.post("/users", user); // Save user to the database
+      navigate("/dashboard"); // Redirect to the dashboard
     });
   };
   return (
