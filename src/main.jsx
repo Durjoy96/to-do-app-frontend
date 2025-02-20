@@ -5,16 +5,19 @@ import MainLayout from "./layout/MainLayout.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Home from "./pages/Home/Home.jsx";
+import AuthProvider from "./AuthProvider/AuthProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>
 );
