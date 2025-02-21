@@ -1,8 +1,11 @@
 import { CirclePlus } from "lucide-react";
 import AxiosPublic from "../../../../hooks/Axios/AxiosPublic";
 import toast from "react-hot-toast";
+import { useContext } from "react";
+import { AuthContext } from "../../../../AuthProvider/AuthProvider";
 
 const AddATask = () => {
+  const { user } = useContext(AuthContext);
   const Axios = AxiosPublic();
   const formHandler = (e) => {
     e.preventDefault();
@@ -14,6 +17,7 @@ const AddATask = () => {
       category,
       description,
       createdAt: new Date().toISOString(),
+      user_email: user.email,
     };
     Axios.post("/tasks", info) // Save task to the database
       .then((res) => {

@@ -16,7 +16,7 @@ export default function Dashboard() {
   const Axios = AxiosPublic();
 
   useEffect(() => {
-    Axios.get("/tasks").then((res) => {
+    Axios.get(`/tasks?email=${user?.email}`).then((res) => {
       setTasks(res.data);
       const todo = res.data.filter((task) => task.category === "To-Do");
       const inProgress = res.data.filter(
@@ -27,7 +27,7 @@ export default function Dashboard() {
       setInProgress(inProgress);
       setDone(done);
     });
-  }, []);
+  }, [user]);
 
   const onDrop = (title, index) => {
     console.log(
