@@ -1,10 +1,57 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { Link } from "react-router";
 import { ListTodo, Pickaxe, SquareCheckBig } from "lucide-react";
+import AddATask from "./components/Add-A-Task/AddATask";
+import AxiosPublic from "../../hooks/Axios/AxiosPublic";
+import Column from "./components/column/Column";
 
 export default function Dashboard() {
   const { user } = useContext(AuthContext);
+  const [tasks, setTasks] = useState([]);
+  const [activeTask, setActiveTask] = useState(null);
+  const [todo, setTodo] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
+  const [done, setDone] = useState([]);
+  const Axios = AxiosPublic();
+
+  useEffect(() => {
+    Axios.get("/tasks").then((res) => {
+      setTasks(res.data);
+      const todo = res.data.filter((task) => task.category === "To-Do");
+      const inProgress = res.data.filter(
+        (task) => task.category === "In Progress"
+      );
+      const done = res.data.filter((task) => task.category === "Done");
+      setTodo(todo);
+      setInProgress(inProgress);
+      setDone(done);
+    });
+  }, []);
+
+  const onDrop = (title, index) => {
+    console.log(
+      ` ${activeTask} is going to place into ${title} at position ${index}`
+    );
+
+    if (activeTask === null) return;
+
+    const task = tasks[activeTask];
+    console.log(task._id);
+    task.category = title;
+    const newTasks = [...tasks];
+    newTasks.splice(activeTask, 1);
+    newTasks.splice(index, 0, task);
+    setTasks(newTasks);
+    const todo = newTasks.filter((task) => task.category === "To-Do");
+    const inProgress = newTasks.filter(
+      (task) => task.category === "In Progress"
+    );
+    const done = newTasks.filter((task) => task.category === "Done");
+    setTodo(todo);
+    setInProgress(inProgress);
+    setDone(done);
+  };
 
   return (
     <>
@@ -18,28 +65,36 @@ export default function Dashboard() {
               Log Out
             </button>
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
-            <div>
-              <h3 className="text-lg font-medium text-base-content-secondary flex items-center gap-2">
-                <ListTodo /> To Do
-              </h3>
-              <div className="bg-base-100 min-h-96 shadow-sm rounded-lg p-6 mt-2"></div>
-            </div>
-            {/* in progress */}
-            <div>
-              <h3 className="text-lg font-medium text-base-content-secondary flex items-center gap-2">
-                <Pickaxe /> In Progress
-              </h3>
-              <div className="bg-base-100 min-h-96 shadow-sm rounded-lg p-6 mt-2"></div>
-            </div>
-            {/* done */}
-            <div>
-              <h3 className="text-lg font-medium text-base-content-secondary flex items-center gap-2">
-                <SquareCheckBig /> Done
-              </h3>
-              <div className="bg-base-100 min-h-96 shadow-sm rounded-lg p-6 mt-2"></div>
-            </div>
+          <div className="flex justify-end mt-12">
+            <AddATask />
           </div>
+          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* todo */}
+            <Column
+              title="To-Do"
+              icon={<ListTodo className="w-5 h-5" />}
+              task={todo}
+              setActiveTask={setActiveTask}
+              onDrop={onDrop}
+            />
+            {/* in progress */}
+            <Column
+              title="In Progress"
+              icon={<Pickaxe className="w-5 h-5" />}
+              task={inProgress}
+              setActiveTask={setActiveTask}
+              onDrop={onDrop}
+            />
+            {/* done */}
+            <Column
+              title="Done"
+              icon={<SquareCheckBig className="w-5 h-5" />}
+              task={done}
+              setActiveTask={setActiveTask}
+              onDrop={onDrop}
+            />
+          </div>
+          <h1>Active Card : {activeTask}</h1>
         </section>
       ) : (
         <h1>

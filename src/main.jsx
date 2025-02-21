@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Home from "./pages/Home/Home.jsx";
 import AuthProvider from "./AuthProvider/AuthProvider.jsx";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="/dashboard" element={<Dashboard />}></Route>
           </Route>
         </Routes>
+        <Toaster />
       </BrowserRouter>
     </AuthProvider>
   </StrictMode>
