@@ -51,6 +51,13 @@ export default function Dashboard() {
     setTodo(todo);
     setInProgress(inProgress);
     setDone(done);
+
+    const updatedTask = {
+      ...task,
+      category: title,
+    };
+
+    Axios.put(`/tasks/${task._id}`, updatedTask);
   };
 
   return (
