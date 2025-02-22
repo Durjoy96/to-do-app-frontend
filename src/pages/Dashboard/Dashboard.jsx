@@ -5,6 +5,7 @@ import { ListTodo, Pickaxe, SquareCheckBig } from "lucide-react";
 import AddATask from "./components/Add-A-Task/AddATask";
 import AxiosPublic from "../../hooks/Axios/AxiosPublic";
 import Column from "./components/column/Column";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const { user } = useContext(AuthContext);
@@ -34,10 +35,10 @@ export default function Dashboard() {
       ` ${activeTask} is going to place into ${title} at position ${index}`
     );
 
-    if (activeTask === null) return;
+    if (activeTask === null || activeTask === undefined) return;
 
     const task = tasks[activeTask];
-    console.log(task._id);
+    console.log(task);
     task.category = title;
     const newTasks = [...tasks];
     newTasks.splice(activeTask, 1);
@@ -51,6 +52,7 @@ export default function Dashboard() {
     setTodo(todo);
     setInProgress(inProgress);
     setDone(done);
+    setActiveTask(null);
 
     const updatedTask = {
       ...task,
@@ -58,6 +60,16 @@ export default function Dashboard() {
     };
 
     Axios.put(`/tasks/${task._id}`, updatedTask);
+  };
+
+  const updateTask = (taskId, task) => {
+    console.log(taskId, task);
+
+    Axios.put(`/tasks/${taskId}`, task).then((res) => {
+      if (res.data.acknowledged) {
+        toast.success("Task updated successfully");
+      }
+    });
   };
 
   return (
@@ -83,6 +95,7 @@ export default function Dashboard() {
               task={todo}
               setActiveTask={setActiveTask}
               onDrop={onDrop}
+              updateTask={updateTask}
             />
             {/* in progress */}
             <Column
@@ -91,6 +104,7 @@ export default function Dashboard() {
               task={inProgress}
               setActiveTask={setActiveTask}
               onDrop={onDrop}
+              updateTask={updateTask}
             />
             {/* done */}
             <Column
@@ -99,6 +113,7 @@ export default function Dashboard() {
               task={done}
               setActiveTask={setActiveTask}
               onDrop={onDrop}
+              updateTask={updateTask}
             />
           </div>
           <h1>Active Card : {activeTask}</h1>
