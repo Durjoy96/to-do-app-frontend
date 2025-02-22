@@ -1,6 +1,6 @@
 import TaskCard from "../task-card/TaskCard";
 
-const Column = ({ title, icon, task, setActiveTask, onDrop, updateTask }) => {
+const Column = ({ title, icon, task, setActiveTask, onDrop, updateTask, deleteTask }) => {
   return (
     <>
       <div>
@@ -14,6 +14,7 @@ const Column = ({ title, icon, task, setActiveTask, onDrop, updateTask }) => {
             onDrop={onDrop}
             title={title}
             updateTask={updateTask}
+            deleteTask={deleteTask}
           />
         </div>
       </div>

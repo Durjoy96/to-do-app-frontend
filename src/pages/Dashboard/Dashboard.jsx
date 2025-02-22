@@ -72,6 +72,12 @@ export default function Dashboard() {
     });
   };
 
+  const deleteTask = (taskId) => {
+    Axios.delete(`/tasks/${taskId}`).then(() =>
+      toast.success("Task deleted successfully")
+    );
+  };
+
   return (
     <>
       {user ? (
@@ -96,6 +102,7 @@ export default function Dashboard() {
               setActiveTask={setActiveTask}
               onDrop={onDrop}
               updateTask={updateTask}
+              deleteTask={deleteTask}
             />
             {/* in progress */}
             <Column
@@ -105,6 +112,7 @@ export default function Dashboard() {
               setActiveTask={setActiveTask}
               onDrop={onDrop}
               updateTask={updateTask}
+              deleteTask={deleteTask}
             />
             {/* done */}
             <Column
@@ -114,6 +122,7 @@ export default function Dashboard() {
               setActiveTask={setActiveTask}
               onDrop={onDrop}
               updateTask={updateTask}
+              deleteTask={deleteTask}
             />
           </div>
           <h1>Active Card : {activeTask}</h1>

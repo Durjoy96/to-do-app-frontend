@@ -1,4 +1,4 @@
-import { Edit } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import DropArea from "../drop-area/DropArea";
 import { useState } from "react";
 
@@ -8,6 +8,7 @@ const TaskCard = ({
   onDrop,
   title: category,
   updateTask,
+  deleteTask,
 }) => {
   const [updateTaskId, setUpdateTaskId] = useState();
 
@@ -50,6 +51,12 @@ const TaskCard = ({
                 className="btn btn-sm btn-circle btn-ghost"
               >
                 <Edit className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => deleteTask(task._id)}
+                className="btn btn-sm btn-circle btn-ghost"
+              >
+                <Trash className="w-5 h-5" />
               </button>
             </div>
           </div>
