@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
+  const [updateTaskId, setUpdateTaskId] = useState(null);
 
   const googleSingIn = () => {
     const provider = new GoogleAuthProvider();
@@ -24,6 +25,8 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     googleSingIn,
     user,
+    updateTaskId,
+    setUpdateTaskId,
   };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

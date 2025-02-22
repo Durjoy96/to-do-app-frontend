@@ -5,7 +5,7 @@ import { ListTodo, Pickaxe, SquareCheckBig } from "lucide-react";
 import AddATask from "./components/Add-A-Task/AddATask";
 import AxiosPublic from "../../hooks/Axios/AxiosPublic";
 import Column from "./components/column/Column";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
   const { user } = useContext(AuthContext);
@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [todo, setTodo] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [done, setDone] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const Axios = AxiosPublic();
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function Dashboard() {
       setInProgress(inProgress);
       setDone(done);
     });
-  }, [user]);
+  }, [user, refresh]);
 
   const onDrop = (title, index) => {
     console.log(
@@ -65,17 +66,21 @@ export default function Dashboard() {
   const updateTask = (taskId, task) => {
     console.log(taskId, task);
 
-    Axios.put(`/tasks/${taskId}`, task).then((res) => {
-      if (res.data.acknowledged) {
-        toast.success("Task updated successfully");
-      }
-    });
+    Axios.put(`/tasks/${taskId}`, task)
+      .then((res) => {
+        if (res.data.acknowledged) {
+          toast.success("Task updated successfully");
+          setRefresh((prev) => !prev);
+        }
+      })
+      .catch((error) => toast.error(error.message));
   };
 
   const deleteTask = (taskId) => {
-    Axios.delete(`/tasks/${taskId}`).then(() =>
-      toast.success("Task deleted successfully")
-    );
+    Axios.delete(`/tasks/${taskId}`).then(() => {
+      toast.success("Task deleted successfully");
+      setRefresh((prev) => !prev);
+    });
   };
 
   return (
@@ -91,7 +96,7 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="flex justify-end mt-12">
-            <AddATask />
+            <AddATask setRefresh={setRefresh} />
           </div>
           <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* todo */}
@@ -125,7 +130,6 @@ export default function Dashboard() {
               deleteTask={deleteTask}
             />
           </div>
-          <h1>Active Card : {activeTask}</h1>
         </section>
       ) : (
         <h1>

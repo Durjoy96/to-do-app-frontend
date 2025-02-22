@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useContext } from "react";
 import { AuthContext } from "../../../../AuthProvider/AuthProvider";
 
-const AddATask = () => {
+const AddATask = ({ setRefresh }) => {
   const { user } = useContext(AuthContext);
   const Axios = AxiosPublic();
   const formHandler = (e) => {
@@ -25,6 +25,7 @@ const AddATask = () => {
           e.target.reset();
           document.getElementById("my_modal_5").close();
           toast.success("Task added successfully");
+          setRefresh((prev) => !prev);
         }
       });
   };

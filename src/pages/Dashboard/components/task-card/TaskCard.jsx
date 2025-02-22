@@ -1,6 +1,7 @@
 import { Edit, Trash } from "lucide-react";
 import DropArea from "../drop-area/DropArea";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../../../AuthProvider/AuthProvider";
 
 const TaskCard = ({
   task,
@@ -10,12 +11,7 @@ const TaskCard = ({
   updateTask,
   deleteTask,
 }) => {
-  const [updateTaskId, setUpdateTaskId] = useState();
-
-  const updateBtnHandler = (id) => {
-    document.getElementById("my_modal_6").showModal();
-    setUpdateTaskId(id);
-  };
+  const { updateTaskId, setUpdateTaskId } = useContext(AuthContext);
 
   const formHandler = (e) => {
     e.preventDefault();
@@ -27,6 +23,7 @@ const TaskCard = ({
       category,
       description,
     };
+    console.log("form", updateTaskId);
     updateTask(updateTaskId, updatedInfo);
     e.target.reset();
     document.getElementById("my_modal_6").close();
@@ -47,7 +44,10 @@ const TaskCard = ({
             <p className="text-base-content-secondary">{task.description}</p>
             <div className="flex justify-end">
               <button
-                onClick={() => updateBtnHandler(task._id)}
+                onClick={() => {
+                  setUpdateTaskId(() => task._id);
+                  document.getElementById("my_modal_6").showModal();
+                }}
                 className="btn btn-sm btn-circle btn-ghost"
               >
                 <Edit className="w-5 h-5" />
